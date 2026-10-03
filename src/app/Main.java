@@ -142,6 +142,8 @@ public class Main {
                     sistema.registrarEstudiante(Integer.parseInt(partes[0].trim()), partes[1],
                             partes[2].split(","), partes[3].split(","));
                     cargados++;
+                } catch (NumberFormatException e) { // va antes porque es un caso de IllegalArgumentException
+                    System.out.println("Línea " + numeroLinea + " ignorada: el ID debe ser un número entero");
                 } catch (IllegalArgumentException e) {
                     System.out.println("Línea " + numeroLinea + " ignorada: " + e.getMessage());
                 }
@@ -149,7 +151,7 @@ public class Main {
         } catch (IOException e) {
             System.out.println("No se pudo leer el archivo: " + e.getMessage());
         }
-        System.out.println(cargados + " estudiantes cargados desde " + ruta);
+        System.out.println(cargados + (cargados == 1 ? " estudiante cargado" : " estudiantes cargados") + " desde " + ruta);
     }
 
     private static String nombres(DLL<Estudiante> estudiantes) {
