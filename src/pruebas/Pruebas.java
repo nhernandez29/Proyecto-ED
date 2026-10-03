@@ -126,6 +126,13 @@ public class Pruebas {
         double limite = 1.45 * Math.log(n + 2) / Math.log(2);
         verificar("1000 claves insertadas en orden: altura " + arbol.altura() + " (límite AVL " + (int) limite + ")",
                 arbol.size() == n && arbol.altura() <= limite);
+        ArbolAVL<Integer, Integer> grande = new ArbolAVL<>();
+        for (int i = 1; i <= 320000; i++) {
+            grande.insertar(i, i);
+        }
+        // 2^18 < 320 000 < 2^19, así que ningún árbol binario con 320 000 nodos tiene menos de 19 niveles
+        verificar("320 000 claves insertadas en orden: altura " + grande.altura() + " (la mínima posible es 19)",
+                grande.size() == 320000 && grande.altura() <= 1.45 * Math.log(320002) / Math.log(2));
         verificar("buscar una clave existente y una inexistente", "v500".equals(arbol.buscar(500)) && arbol.buscar(5000) == null);
         arbol.insertar(500, "nuevo");
         verificar("insertar una clave existente reemplaza el valor", "nuevo".equals(arbol.buscar(500)) && arbol.size() == n);
