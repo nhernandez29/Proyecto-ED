@@ -3,6 +3,7 @@ package app;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 import deportes.Conexion;
@@ -12,8 +13,8 @@ import deportes.SistemaDeportes;
 import estructuras.DLL;
 import estructuras.DLLNode;
 
-// Interfaz de consola del prototipo. Los datos se pueden cargar desde un archivo de texto con una línea
-// por estudiante: id;nombre;deportes que practica;deportes que le interesan (las listas, separadas por coma)
+// Interfaz de consola del prototipo. Los datos se pueden cargar desde un archivo de texto en UTF-8 con una
+// línea por estudiante: id;nombre;deportes que practica;deportes que le interesan (las listas, separadas por coma)
 // Uso: java -cp out app.Main [archivo de datos]
 public class Main {
 
@@ -120,10 +121,15 @@ public class Main {
     private static void cargarArchivo(String ruta) {
         int cargados = 0;
         int numeroLinea = 0;
-        try (BufferedReader lector = new BufferedReader(new FileReader(ruta))) {
+        // se lee siempre en UTF-8: con la codificación por defecto (en Windows con Java 17 no es UTF-8) "Fútbol"
+        // llegaría con otros caracteres y quedaría como un deporte distinto de "futbol"
+        try (BufferedReader lector = new BufferedReader(new FileReader(ruta, StandardCharsets.UTF_8))) {
             String linea;
             while ((linea = lector.readLine()) != null) {
                 numeroLinea++;
+                if (numeroLinea == 1 && linea.startsWith("\uFEFF")) {
+                    linea = linea.substring(1); // marca BOM que agregan algunos editores al guardar en UTF-8
+                }
                 if (linea.isBlank() || linea.trim().startsWith("#")) {
                     continue;
                 }
@@ -170,8 +176,10 @@ public class Main {
 
     private static String leerTexto(String mensaje) {
         System.out.print(mensaje);
-        if (!entrada.hasNextLine()) {
-            return "0"; // fin de la entrada: se sale del programa
+        if (!entrada.hasNextLine()) { // fin de la entrada (por ejemplo, Ctrl+D o un archivo redirigido)
+            System.out.println();
+            System.out.println("Fin de la entrada. Hasta luego.");
+            System.exit(0);
         }
         return entrada.nextLine();
     }
