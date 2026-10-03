@@ -1,6 +1,7 @@
 package deportes;
 
 import java.text.Normalizer;
+import java.util.regex.Pattern;
 
 import estructuras.DLL;
 
@@ -10,6 +11,10 @@ public class Deporte {
     private final String nombre; // como se escribió la primera vez, para mostrarlo
     private final String clave; // nombre normalizado, con el que se busca en el árbol de deportes
     private final DLL<Estudiante> practicantes;
+
+    // las expresiones regulares se compilan una sola vez y no en cada llamada a normalizar
+    private static final Pattern TILDES = Pattern.compile("\\p{M}");
+    private static final Pattern ESPACIOS = Pattern.compile("\\s+");
 
     // marcas que usa el recorrido por anchura de SistemaDeportes (ver allí la explicación)
     int marcaVisita;
@@ -42,8 +47,8 @@ public class Deporte {
         if (nombre == null) {
             throw new IllegalArgumentException("El nombre del deporte no puede ser null");
         }
-        String sinTildes = Normalizer.normalize(nombre.trim(), Normalizer.Form.NFD).replaceAll("\\p{M}", "");
-        return sinTildes.toLowerCase().replaceAll("\\s+", " ");
+        String sinTildes = TILDES.matcher(Normalizer.normalize(nombre.trim(), Normalizer.Form.NFD)).replaceAll("");
+        return ESPACIOS.matcher(sinTildes.toLowerCase()).replaceAll(" ");
     }
 
     @Override
