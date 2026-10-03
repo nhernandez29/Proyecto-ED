@@ -21,6 +21,8 @@ public class SistemaDeportes {
     // Cada recorrido usa un número distinto: un estudiante o un deporte está visitado si su marca es igual
     // al número del recorrido actual. Así no hay que limpiar las marcas antes de cada recorrido
     private int numeroRecorrido = 0;
+    // lo mismo para cada registro: marca los deportes que ya se le agregaron al estudiante que se registra
+    private int numeroRegistro = 0;
 
     // RF1. Registra un estudiante. Los deportes que no existían se crean. Si un deporte aparece como
     // practicado y como interés, cuenta solo como practicado
@@ -33,15 +35,17 @@ public class SistemaDeportes {
             throw new IllegalArgumentException("Ya existe un estudiante con el ID " + id);
         }
         Estudiante estudiante = new Estudiante(id, nombre);
+        numeroRegistro++;
         for (String nombreDeporte : practica) {
             if (nombreDeporte == null || nombreDeporte.isBlank()) {
                 continue;
             }
             Deporte deporte = obtenerOCrear(nombreDeporte);
-            if (estudiante.practica(deporte)) {
+            if (deporte.marcaRegistro == numeroRegistro) {
                 continue; // el deporte estaba repetido en la lista
             }
-            quitarDelRanking(deporte);
+            deporte.marcaRegistro = numeroRegistro;
+            quitarDelRanking(deporte); // se saca con la cantidad vieja antes de cambiarla
             DLLNode<Estudiante> nodo = deporte.getPracticantes().pushBack(estudiante);
             estudiante.getPractica().pushBack(new Estudiante.Practica(deporte, nodo));
             agregarAlRanking(deporte);
@@ -51,7 +55,8 @@ public class SistemaDeportes {
                 continue;
             }
             Deporte deporte = obtenerOCrear(nombreDeporte);
-            if (!estudiante.practica(deporte) && !estudiante.leInteresa(deporte)) {
+            if (deporte.marcaRegistro != numeroRegistro) { // ni lo practica ni estaba ya entre sus intereses
+                deporte.marcaRegistro = numeroRegistro;
                 estudiante.getIntereses().pushBack(deporte);
             }
         }
@@ -72,7 +77,7 @@ public class SistemaDeportes {
         }
         for (DLLNode<Estudiante.Practica> n = estudiante.getPractica().getHead(); n != null; n = n.getNext()) {
             Deporte deporte = n.getData().deporte;
-            quitarDelRanking(deporte);
+            quitarDelRanking(deporte); // se saca con la cantidad vieja antes de cambiarla
             deporte.getPracticantes().deleteNode(n.getData().nodo); // O(1) gracias a la referencia guardada
             agregarAlRanking(deporte);
         }
@@ -107,7 +112,7 @@ public class SistemaDeportes {
     // RF5 y RF6. Busca, por anchura, el estudiante más cercano que practica alguno de los deportes que le
     // interesan al estudiante dado. Como el recorrido avanza por niveles, el primero que se encuentra es el
     // que tiene menos intermediarios. Si nadie alcanzable lo practica, se indica que no hay conexión
-    public Conexion buscarConexion(int id) { // O(n + m)
+    public Conexion buscarConexion(int id) { // O(i + n + m)
         Estudiante origen = buscarObligatorio(id);
         if (origen.getIntereses().isEmpty()) {
             return new Conexion(origen, "no tiene deportes de interés registrados");

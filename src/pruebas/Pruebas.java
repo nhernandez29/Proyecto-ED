@@ -196,9 +196,9 @@ public class Pruebas {
     static void probarRegistro() {
         SistemaDeportes sistema = new SistemaDeportes();
         Estudiante ana = sistema.registrarEstudiante(1, "Ana", new String[] { "Fútbol", "futbol", "Rugby" },
-                new String[] { "Natación", "rugby" });
+                new String[] { "Natación", "rugby", "NATACION" });
         verificar("deporte repetido con otra escritura cuenta una vez", ana.cantidadDeportesQuePractica() == 2);
-        verificar("un deporte que ya practica no queda como interés",
+        verificar("un deporte que ya practica no queda como interés, y un interés repetido cuenta una vez",
                 ana.deportesDeInteres().toString().equals("[Natación]"));
         verificar("ID duplicado lanza excepción", lanza(() -> sistema.registrarEstudiante(1, "Otra", new String[] {},
                 new String[] {})));

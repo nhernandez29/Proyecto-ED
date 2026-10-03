@@ -16,9 +16,10 @@ public class Deporte {
     private static final Pattern TILDES = Pattern.compile("\\p{M}");
     private static final Pattern ESPACIOS = Pattern.compile("\\s+");
 
-    // marcas que usa el recorrido por anchura de SistemaDeportes (ver allí la explicación)
+    // marcas que usan el recorrido por anchura y el registro de SistemaDeportes (ver allí la explicación)
     int marcaVisita;
     int marcaInteres;
+    int marcaRegistro;
 
     Deporte(String nombre) {
         this.nombre = nombre.trim();
