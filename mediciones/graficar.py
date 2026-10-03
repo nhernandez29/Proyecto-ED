@@ -18,8 +18,8 @@ buscar = [float(f["buscar_ns"]) for f in filas]
 conexion = [float(f["conexion_ms"]) for f in filas]
 comunidades = [float(f["comunidades_ms"]) for f in filas]
 
-plt.rcParams.update({"font.size": 7, "font.family": "Arial"})
-fig, (izq, der) = plt.subplots(1, 2, figsize=(8.8 / 2.54, 4.8 / 2.54))
+plt.rcParams.update({"font.size": 8, "font.family": "Arial"})
+fig, (izq, der) = plt.subplots(1, 2, figsize=(8.8 / 2.54, 5.4 / 2.54))
 
 izq.plot(n, buscar, "o-", color="#4F6D8F", ms=3, lw=1)
 izq.set_xscale("log", base=2)
@@ -29,7 +29,7 @@ izq.minorticks_off()
 izq.set_ylim(0, max(buscar) * 1.25)
 izq.set_xlabel("n (miles de estudiantes)")
 izq.set_ylabel("ns por búsqueda")
-izq.set_title("(a) Búsqueda por ID", fontsize=7)
+izq.set_title("(a) Búsqueda por ID", fontsize=8)
 
 # recta que pasa por el origen y se ajusta por mínimos cuadrados: así se vería un crecimiento lineal exacto
 pendiente = sum(x * y for x, y in zip(nm, conexion)) / sum(x * x for x in nm)
@@ -40,8 +40,8 @@ der.set_xticks([0, 300, 600, 900])
 der.set_xlim(0, max(nm) * 1.04)
 der.set_xlabel("n + m (miles)")
 der.set_ylabel("ms por consulta")
-der.set_title("(b) Recorridos por anchura", fontsize=7)
-der.legend(frameon=False, fontsize=6, loc="upper left", handlelength=1.6)
+der.set_title("(b) Recorridos por anchura", fontsize=8)
+der.legend(frameon=False, fontsize=7, loc="upper left", handlelength=1.6)
 
 for ax in (izq, der):
     ax.spines["top"].set_visible(False)
