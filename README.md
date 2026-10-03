@@ -4,13 +4,7 @@ Proyecto del curso Estructuras de Datos (2026-2), Universidad Nacional de Colomb
 
 ## Descripción
 
-Sistema de consola para registrar estudiantes de la universidad con los deportes que practican y los deportes que les interesan. A partir de esos datos el sistema:
-
-1. Agrupa a los estudiantes que comparten al menos un deporte en comunidades deportivas. Dos estudiantes quedan en la misma comunidad si comparten un deporte o si hay una cadena de estudiantes que los une compartiendo deportes.
-2. Indica si un estudiante está conectado, directa o indirectamente, con alguien que practica uno de los deportes que le interesan, y por medio de quién. Si esa conexión no existe, lo indica.
-3. Da acceso directo a los datos de un estudiante a partir de su ID.
-4. Permite eliminar a un estudiante.
-5. Cuenta cuántos estudiantes practican cada deporte y muestra los deportes ordenados de más a menos practicantes.
+Sistema de consola para registrar estudiantes de la universidad con los deportes que practican y los deportes que les interesan. A partir de esos datos, el sistema agrupa en comunidades deportivas a los estudiantes que comparten al menos un deporte (dos estudiantes quedan en la misma comunidad si comparten un deporte o si hay una cadena de estudiantes que los une compartiendo deportes) e indica si un estudiante está conectado, directa o indirectamente, con alguien que practica uno de los deportes que le interesan, y por medio de quién; si esa conexión no existe, lo indica. También da acceso directo a los datos de un estudiante a partir de su ID, permite eliminarlo y cuenta cuántos estudiantes practican cada deporte, mostrando los deportes de más a menos practicantes.
 
 Esta es la versión de la Entrega 1: un prototipo que ya resuelve los requisitos con listas, colas y árboles AVL implementados por el equipo, sin usar las colecciones de `java.util`.
 
@@ -68,7 +62,7 @@ El archivo es opcional; sin él, el programa arranca vacío y los estudiantes se
 0. Salir
 ```
 
-Correr las pruebas (imprimen PASÓ o FALLÓ por cada caso y terminan con código 1 si alguna falla):
+Correr las pruebas (51 casos; imprimen PASÓ o FALLÓ por cada uno y terminan con código 1 si alguno falla):
 
 ```bash
 java -cp out pruebas.Pruebas
@@ -145,4 +139,4 @@ Aquí n es la cantidad de estudiantes, d la de deportes y p la de deportes que p
 
 ## Próximas entregas
 
-En la Entrega 2 se completará la implementación con los temas vistos hasta árboles AVL y se repetirán las mediciones con más cuidado, comparando el AVL con una lista y con un árbol binario de búsqueda sin balancear. Para la Entrega 3 se planea cambiar el acceso por ID a una tabla hash, representar las relaciones como un grafo explícito con listas de adyacencia y comparar las comunidades calculadas con recorridos contra conjuntos disjuntos.
+En la Entrega 2 se completará la implementación con los temas vistos hasta árboles AVL y se repetirán las mediciones con más cuidado, comparando el AVL con una lista y con un árbol binario de búsqueda sin balancear. Para la Entrega 3 se planea cambiar el acceso por ID a una tabla hash, representar las relaciones como una clase de grafo con listas de adyacencia (con estudiantes y deportes como vértices), comparar las comunidades calculadas con recorridos contra conjuntos disjuntos y usar un montículo si se quieren mostrar solo los deportes más practicados.
