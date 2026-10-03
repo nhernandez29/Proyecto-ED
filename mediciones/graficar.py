@@ -41,7 +41,7 @@ der.set_xlim(0, max(nm) * 1.04)
 der.set_xlabel("n + m (miles)")
 der.set_ylabel("ms por consulta")
 der.set_title("(b) Recorridos por anchura", fontsize=8)
-der.legend(frameon=False, fontsize=7, loc="upper left", handlelength=1.6)
+der.legend(frameon=False, fontsize=7, loc="lower right", handlelength=1.6)
 
 for ax in (izq, der):
     ax.spines["top"].set_visible(False)
