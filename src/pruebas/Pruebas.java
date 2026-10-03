@@ -122,17 +122,16 @@ public class Pruebas {
         for (int i = 1; i <= n; i++) {
             arbol.insertar(i, "v" + i); // claves en orden: un árbol sin balancear quedaría como una lista
         }
-        // la altura de un AVL con n nodos es menor que 1,45 log2(n + 2)
-        double limite = 1.45 * Math.log(n + 2) / Math.log(2);
-        verificar("1000 claves insertadas en orden: altura " + arbol.altura() + " (límite AVL " + (int) limite + ")",
-                arbol.size() == n && arbol.altura() <= limite);
+        // 2^9 < 1000 < 2^10: ningún árbol binario con 1000 nodos tiene menos de 10 niveles
+        verificar("1000 claves insertadas en orden: altura " + arbol.altura() + " (la mínima posible es 10)",
+                arbol.size() == n && arbol.altura() == 10);
         ArbolAVL<Integer, Integer> grande = new ArbolAVL<>();
         for (int i = 1; i <= 320000; i++) {
             grande.insertar(i, i);
         }
         // 2^18 < 320 000 < 2^19, así que ningún árbol binario con 320 000 nodos tiene menos de 19 niveles
         verificar("320 000 claves insertadas en orden: altura " + grande.altura() + " (la mínima posible es 19)",
-                grande.size() == 320000 && grande.altura() <= 1.45 * Math.log(320002) / Math.log(2));
+                grande.size() == 320000 && grande.altura() == 19);
         verificar("buscar una clave existente y una inexistente", "v500".equals(arbol.buscar(500)) && arbol.buscar(5000) == null);
         arbol.insertar(500, "nuevo");
         verificar("insertar una clave existente reemplaza el valor", "nuevo".equals(arbol.buscar(500)) && arbol.size() == n);
@@ -148,12 +147,14 @@ public class Pruebas {
         verificar("eliminar una hoja, un nodo con un hijo y la raíz con dos hijos",
                 bien && pequeno.valoresEnOrden().toString().equals("[30, 35, 60, 70, 80]"));
 
-        // secuencia larga de inserciones y eliminaciones al azar comparada con un arreglo de presencia
+        // secuencia larga de inserciones y eliminaciones al azar comparada con un arreglo de presencia; después de
+        // cada operación la altura debe seguir por debajo de la cota del AVL, 1,44 log2(n + 2)
         ArbolAVL<Integer, Integer> azar = new ArbolAVL<>();
         boolean[] presente = new boolean[500];
         int cantidad = 0;
         long semilla = 2026;
         boolean coincide = true;
+        boolean balanceado = true;
         for (int paso = 0; paso < 20000; paso++) {
             semilla = (semilla * 1103515245 + 12345) & 0x7fffffff; // generador lineal congruencial
             int clave = (int) (semilla % 500);
@@ -171,9 +172,11 @@ public class Pruebas {
                 azar.insertar(clave, clave);
                 presente[clave] = true;
             }
+            balanceado = balanceado && azar.altura() <= 1.44 * Math.log(azar.size() + 2) / Math.log(2);
         }
         verificar("20 000 operaciones al azar: tamaño y contenido coinciden con el modelo",
                 coincide && azar.size() == cantidad && ordenada(azar.valoresEnOrden(), presente));
+        verificar("y después de cada inserción o eliminación la altura respeta la cota del AVL", balanceado);
     }
 
     static boolean ordenada(DLL<Integer> valores, boolean[] presente) {
