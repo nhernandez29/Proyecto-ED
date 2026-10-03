@@ -87,7 +87,7 @@ El primer comando deja `mediciones/resultados.csv` (el valor de la ronda más r�
 
 ## Formato del archivo de datos
 
-Una línea por estudiante, con cuatro campos separados por punto y coma. Los deportes de cada lista van separados por coma y cualquiera de las dos listas puede quedar vacía. Las líneas vacías y las que empiezan con `#` se ignoran.
+El archivo debe estar guardado en UTF-8 (así lo lee siempre el programa). Lleva una línea por estudiante, con cuatro campos separados por punto y coma. Los deportes de cada lista van separados por coma y cualquiera de las dos listas puede quedar vacía. Las líneas vacías y las que empiezan con `#` se ignoran.
 
 ```
 id;nombre;deportes que practica;deportes que le interesan
@@ -95,7 +95,7 @@ id;nombre;deportes que practica;deportes que le interesan
 1016;Felipe Ramírez;;Baloncesto
 ```
 
-Los nombres de los deportes se comparan sin tener en cuenta mayúsculas, tildes ni espacios sobrantes, así que `Fútbol`, `futbol` y ` FUTBOL ` son el mismo deporte. Si una línea tiene un error (ID repetido, ID que no es número, nombre vacío), se informa el número de línea y se sigue con las demás.
+Los nombres de los deportes se comparan sin tener en cuenta mayúsculas, tildes ni espacios sobrantes, así que `Fútbol`, `futbol` y `"  FUTBOL "` (con espacios al inicio y al final) son el mismo deporte. Si una línea tiene un error (ID repetido, ID que no es número, nombre vacío), se informa el número de línea y se sigue con las demás.
 
 ## Estructura del proyecto
 
@@ -119,7 +119,7 @@ Proyecto-ED/
     ├── deportes/              lógica del problema
     │   ├── Estudiante.java
     │   ├── Deporte.java
-    │   ├── ClaveRanking.java  orden de los deportes por cantidad de practicantes
+    │   ├── ClaveRanking.java  clave del AVL del ranking (número de practicantes, nombre)
     │   ├── Conexion.java      resultado de la búsqueda de conexión
     │   └── SistemaDeportes.java
     ├── app/
@@ -136,12 +136,12 @@ Proyecto-ED/
 |---|---|---|
 | Estudiantes por ID | Árbol AVL `ArbolAVL<Integer, Estudiante>` | buscar, insertar y eliminar en O(log n) |
 | Deportes por nombre | Árbol AVL `ArbolAVL<String, Deporte>` | buscar o crear en O(log d) |
-| Deportes ordenados por practicantes | Árbol AVL con clave (cantidad, nombre) | actualizar en O(log d), recorrer en orden en O(d) |
+| Deportes ordenados por practicantes | Árbol AVL del ranking, con clave (número de practicantes, nombre) | actualizar en O(log d), recorrer en orden en O(d) |
 | Practicantes de cada deporte | Lista doblemente enlazada | agregar y quitar en O(1) con la referencia al nodo |
 | Deportes de cada estudiante | Lista doblemente enlazada | recorrer en O(p) |
-| Recorrido de comunidades y conexiones | Cola | encolar y desencolar en O(1) |
+| Recorrido de comunidades y conexiones | Cola | encolar en O(1) amortizado y desencolar en O(1) |
 
-Aquí n es la cantidad de estudiantes, d la de deportes y p la de deportes que practica un estudiante. Las comunidades y la búsqueda de conexión son recorridos por anchura sobre los estudiantes y los deportes que practican, con costo O(n + m), donde m es el total de parejas (estudiante, deporte que practica). La búsqueda por anchura encuentra primero al estudiante con menos intermediarios. El informe de la entrega explica la elección de cada estructura y las alternativas que se descartaron.
+Aquí n es la cantidad de estudiantes, d la de deportes y p la de deportes que practica un estudiante. Las comunidades y la búsqueda de conexión son recorridos por anchura sobre los estudiantes y los deportes que practican, con costo O(n + m), donde m es el total de parejas (estudiante, deporte que practica). El recorrido por anchura encuentra primero al estudiante con menos intermediarios. El informe de la entrega explica la elección de cada estructura y las alternativas que se descartaron.
 
 ## Próximas entregas
 
